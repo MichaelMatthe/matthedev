@@ -1,0 +1,39 @@
+<div>
+    <canvas
+        id="drawingCanvas"
+        width="700"
+        height="500"
+        style="border: 5px solid #000000"
+    >
+    </canvas>
+</div>
+
+<div>
+    <button onclick="changeRadius(1)">1</button>
+    <button onclick="changeRadius(5)">5</button>
+    <button onclick="changeRadius(10)">10</button>
+    <button onclick="changeRadius(10)">20</button>
+    <button onclick="changeRadius(50)">50</button>
+</div>
+<div>
+    <input type="color" id="colorPicker" name="favcolor" value="#ff0000" />
+</div>
+<div>
+    <button onclick="changeColor('#FF0000')">Red</button>
+    <button onclick="changeColor('#00FF00')">Green</button>
+    <button onclick="changeColor('#0000FF')">Blue</button>
+    <button onclick="changeColor('#FFFFFF')">Erase</button>
+</div>
+<div>
+    <button onclick="clearCanvas()">Clear</button>
+</div>
+<div>
+    <button onclick="sendMessage()">Message</button>
+    <input type="checkbox" id="drawLive" /> Draw Live?
+</div>
+<script
+    src="https://code.jquery.com/jquery-3.5.1.min.js"
+    integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+    crossorigin="anonymous"
+></script>
+<script src="javascripts/game.js"></script>
