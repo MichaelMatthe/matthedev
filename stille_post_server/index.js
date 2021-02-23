@@ -42,6 +42,11 @@ io.on("connection", function (socket) {
     });
 
     socket.on("joinLobby", function (data) {
+        if (!lobbies.hasOwnProperty(data.lobbyId)) {
+            socket.emit("error", { message: "lobby does not exist" });
+            return;
+        }
+
         for (var key in lobbies[data.lobbyId].sockets) {
             lobbies[data.lobbyId].sockets[key].emit("playerJoinsLobby", {
                 name: data.name,
@@ -222,5 +227,5 @@ function endRound(lobbyId) {
             players: lobbies[lobbyId].sendToPlayer,
         });
     }
-    lobbies[lobbyId];
+    delete lobbies[lobbyId];
 }

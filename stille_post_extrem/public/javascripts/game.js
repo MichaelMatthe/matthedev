@@ -204,6 +204,10 @@ window.onload = function () {
         endGame(data);
         $("#resultDiv").removeClass("d-none");
     });
+
+    socket.on("error", function (data) {
+        console.log(data.message);
+    });
 };
 
 function createLobby() {
