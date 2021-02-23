@@ -1,8 +1,30 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+.dot-grey {
+    height: 20px;
+    width: 20px;
+    background-color: #8a8a8a;
+    border-radius: 50%;
 }
 
-a {
-  color: #00B7FF;
+.left {
+    transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+}
+
+.down {
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+}
+
+.up {
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+}
+
+.right {
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+}
+
+.main-container {
+    background-color: grey;
 }
