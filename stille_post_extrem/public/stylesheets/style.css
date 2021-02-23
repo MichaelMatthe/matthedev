@@ -51,26 +51,6 @@
     margin: 2px;
 }
 
-.brushButton {
-    display: inline-block;
-    border: 1px solid #00000026;
-    border-radius: 0;
-    outline: none;
-    cursor: pointer;
-    width: 20px;
-    height: 20px;
-    margin: 2px;
-}
-
 .colorPalette {
-    margin: 5px;
-}
-
-.brushes {
-    margin: 5px;
-    margin-left: 10px;
-}
-
-.drawButtons {
-    margin: 5px;
+    border: 1px solid black;
 }

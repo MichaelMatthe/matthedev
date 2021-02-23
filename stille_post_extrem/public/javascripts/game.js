@@ -21,67 +21,40 @@ window.onload = function () {
     });
 
     // Definitions
-    canvas = document.getElementById("paint-canvas");
-    context = canvas.getContext("2d");
-    boundings = canvas.getBoundingClientRect();
+    canvas = new fabric.Canvas("paint-canvas");
+    canvas.isDrawingMode = true;
+    canvas.freeDrawingBrush.width = 20;
+    canvas.freeDrawingBrush.color = "#000000";
+    canvas.add(
+        new fabric.Rect({
+            left: 0,
+            top: 0,
+            fill: "white",
+            width: canvas.width,
+            height: canvas.height,
+        })
+    );
 
-    context.fillStyle = "#FFFFFF";
-    context.fillRect(0, 0, canvas.width, canvas.height);
     // Create color buttons
     setUpColors();
 
     guessCanvas = document.getElementById("guess-canvas");
     guessContext = guessCanvas.getContext("2d");
 
-    // Specifications
-    var mouseX = 0;
-    var mouseY = 0;
-    context.strokeStyle = "black"; // initial brush color
-    context.lineWidth = 1; // initial brush width
-    var isDrawing = false;
-
-    // Mouse Down Event
-    canvas.addEventListener("mousedown", function (event) {
-        setMouseCoordinates(event);
-        isDrawing = true;
-
-        // Start Drawing
-        context.beginPath();
-        context.moveTo(mouseX, mouseY);
-    });
-
-    // Mouse Move Event
-    canvas.addEventListener("mousemove", function (event) {
-        setMouseCoordinates(event);
-
-        if (isDrawing) {
-            context.lineTo(mouseX, mouseY);
-            context.stroke();
-        }
-    });
-
-    // Mouse Up Event
-    canvas.addEventListener("mouseup", function (event) {
-        setMouseCoordinates(event);
-        isDrawing = false;
-    });
-
-    canvas.addEventListener("mouseleave", function (event) {
-        isDrawing = false;
-    });
-
-    // Handle Mouse Coordinates
-    function setMouseCoordinates(event) {
-        mouseX = event.clientX - boundings.left;
-        mouseY = event.clientY - boundings.top;
-    }
-
     // Handle Clear Button
     var clearButton = document.getElementById("clear");
 
     clearButton.addEventListener("click", function () {
-        context.fillStyle = "#FFFFFF";
-        context.fillRect(0, 0, canvas.width, canvas.height);
+        canvas.clear();
+        canvas.add(
+            new fabric.Rect({
+                left: 0,
+                top: 0,
+                fill: "white",
+                width: canvas.width,
+                height: canvas.height,
+            })
+        );
     });
 
     // update join / create lobby button
@@ -200,18 +173,24 @@ window.onload = function () {
     });
 
     socket.on("startDrawRound", function (data) {
-        context.fillStyle = "#FFFFFF";
-        context.fillRect(0, 0, canvas.width, canvas.height);
         $("#guessWord").html(data.word);
         console.log("Start Draw Round", data);
         resetSubmitCircles();
         showDrawing();
-        resize();
+        canvas.calcOffset();
+        canvas.clear();
+        canvas.add(
+            new fabric.Rect({
+                left: 0,
+                top: 0,
+                fill: "white",
+                width: canvas.width,
+                height: canvas.height,
+            })
+        );
     });
 
     socket.on("startGuessRound", function (data) {
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        console.log("Start Guess Round", data);
         let image = new Image();
         image.onload = function () {
             guessContext.drawImage(image, 0, 0);
@@ -219,13 +198,13 @@ window.onload = function () {
         image.src = data.image;
         resetSubmitCircles();
         showGuessing();
-        resize();
+    });
+
+    socket.on("endGame", function (data) {
+        endGame(data);
+        $("#resultDiv").removeClass("d-none");
     });
 };
-
-function resize() {
-    boundings = canvas.getBoundingClientRect();
-}
 
 function createLobby() {
     if ($("#nameInput").val() != "") {
@@ -263,6 +242,51 @@ function showDrawing() {
 function showGuessing() {
     $("#guessCanvasDiv").removeClass("d-none");
     notWaitingForPlayers();
+}
+
+function endGame(data) {
+    let content = data.content;
+    let players = data.players;
+
+    notWaitingForPlayers();
+    $("#drawCanvasDiv").addClass("d-none");
+    $("#guessCanvasDiv").addClass("d-none");
+    $("#submitWord").addClass("d-none");
+
+    let width = 400;
+    let height = 300;
+
+    for (var player in content) {
+        let nameDiv = document.createElement("div");
+        nameDiv.innerHTML = player + "'s Wort: " + content[currentPlayer][0];
+        $("#results").append(nameDiv);
+
+        currentPlayer = player;
+        for (var i = 1; i < content[player].length; i++) {
+            if (i % 2 == 0) {
+                let div = document.createElement("div");
+                div.innerHTML =
+                    currentPlayer + "'s Guess: " + content[currentPlayer][i];
+                $("#results").append(div);
+            } else {
+                let div = document.createElement("div");
+                div.innerHTML = currentPlayer + "'s Drawing:";
+                $("#results").append(div);
+                let canvas = document.createElement("canvas");
+                canvas.width = width;
+                canvas.height = height;
+                canvas.style.border = "1px solid black";
+                let context = canvas.getContext("2d");
+                let image = new Image();
+                image.onload = function () {
+                    context.drawImage(image, 0, 0, width, height);
+                };
+                image.src = content[currentPlayer][i];
+                $("#results").append(canvas);
+            }
+            currentPlayer = players[currentPlayer];
+        }
+    }
 }
 
 function waitingForPlayers() {
@@ -353,6 +377,7 @@ function setUpColors() {
         "#70d038",
         "#b4e448",
     ];
+    // colors
     let row = document.createElement("div");
     row.classList.add("row");
     let rows = [];
@@ -364,11 +389,11 @@ function setUpColors() {
         colorButton.style.backgroundColor = color;
 
         colorButton.addEventListener("click", function (event) {
-            context.strokeStyle = color;
+            canvas.freeDrawingBrush.color = color;
         });
 
         row.appendChild(colorButton);
-        if ((i + 1) % 8 == 0) {
+        if ((i + 1) % 16 == 0) {
             row = document.createElement("div");
             row.classList.add("row");
             rows.push(row);
@@ -378,14 +403,19 @@ function setUpColors() {
         document.getElementById("colors").appendChild(row);
     });
 
-    document.getElementById("brushes").style.width = "20px";
-    [1, 5, 10, 20].forEach((size) => {
+    // brushes
+    let brushSizes = [1, 5, 10, 20];
+    for (var i = 0; i < brushSizes.length; i++) {
+        let size = brushSizes[i];
+
         let brushButton = document.createElement("button");
         brushButton.classList.add("brushButton");
-        brushButton.classList.add("row");
         brushButton.style.display = "flex";
         brushButton.style.justifyContent = "center";
         brushButton.style.alignItems = "center";
+        brushButton.style.width = "30px";
+        brushButton.style.height = "30px";
+        brushButton.style.padding = "0px";
 
         let brushDiv = document.createElement("div");
         brushDiv.style.backgroundColor = "black";
@@ -395,9 +425,9 @@ function setUpColors() {
         brushButton.appendChild(brushDiv);
         document.getElementById("brushes").appendChild(brushButton);
         brushButton.addEventListener("click", function (event) {
-            context.lineWidth = size;
+            canvas.freeDrawingBrush.width = size;
         });
-    });
+    }
 
     // TODO Eraser
 }
