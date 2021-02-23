@@ -61,6 +61,7 @@ io.on("connection", function (socket) {
         // randomize player order
         shuffle(lobbies[data.lobbyId].players);
         lobbies[data.lobbyId].submitted = 0;
+        lobbies[data.lobbyId].round = 0;
 
         lobbies[data.lobbyId].playerContent = {};
 
@@ -94,6 +95,7 @@ io.on("connection", function (socket) {
             lobbies[data.lobbyId].submitted >=
             lobbies[data.lobbyId].players.length
         ) {
+            lobbies[data.lobbyId].round += 1;
             for (var key in lobbies[data.lobbyId].sockets) {
                 let receiverName = lobbies[data.lobbyId].sendToPlayer[key];
                 lobbies[data.lobbyId].sockets[receiverName].emit(
@@ -104,7 +106,6 @@ io.on("connection", function (socket) {
                 );
             }
             lobbies[data.lobbyId].submitted = 0;
-            lobbies[data.lobbyId].round = 1;
         }
     });
 
@@ -119,21 +120,30 @@ io.on("connection", function (socket) {
             lobbies[data.lobbyId].submitted >=
             lobbies[data.lobbyId].players.length
         ) {
-            for (var key in lobbies[data.lobbyId].sockets) {
-                let receiverName = lobbies[data.lobbyId].sendToPlayer[key];
-                lobbies[data.lobbyId].sockets[receiverName].emit(
-                    "startGuessRound",
-                    {
-                        image:
-                            lobbies[data.lobbyId].playerContent[key][
-                                lobbies[data.lobbyId].playerContent[key]
-                                    .length - 1
-                            ],
-                    }
-                );
+            lobbies[data.lobbyId].round += 1;
+            if (
+                lobbies[data.lobbyId].round >=
+                lobbies[data.lobbyId].players.length
+            ) {
+                endRound(data.lobbyId);
+                return;
+            } else {
+                for (var key in lobbies[data.lobbyId].sockets) {
+                    let receiverName = lobbies[data.lobbyId].sendToPlayer[key];
+                    lobbies[data.lobbyId].sockets[receiverName].emit(
+                        "startGuessRound",
+                        {
+                            image:
+                                lobbies[data.lobbyId].playerContent[key][
+                                    lobbies[data.lobbyId].playerContent[key]
+                                        .length - 1
+                                ],
+                            round: lobbies[data.lobbyId].round,
+                        }
+                    );
+                }
+                lobbies[data.lobbyId].submitted = 0;
             }
-            lobbies[data.lobbyId].submitted = 0;
-            lobbies[data.lobbyId].round = 1;
         }
     });
 
@@ -148,21 +158,30 @@ io.on("connection", function (socket) {
             lobbies[data.lobbyId].submitted >=
             lobbies[data.lobbyId].players.length
         ) {
-            for (var key in lobbies[data.lobbyId].sockets) {
-                let receiverName = lobbies[data.lobbyId].sendToPlayer[key];
-                lobbies[data.lobbyId].sockets[receiverName].emit(
-                    "startDrawRound",
-                    {
-                        word:
-                            lobbies[data.lobbyId].playerContent[key][
-                                lobbies[data.lobbyId].playerContent[key]
-                                    .length - 1
-                            ],
-                    }
-                );
+            lobbies[data.lobbyId].round += 1;
+            if (
+                lobbies[data.lobbyId].round >=
+                lobbies[data.lobbyId].players.length
+            ) {
+                endRound(data.lobbyId);
+                return;
+            } else {
+                for (var key in lobbies[data.lobbyId].sockets) {
+                    let receiverName = lobbies[data.lobbyId].sendToPlayer[key];
+                    lobbies[data.lobbyId].sockets[receiverName].emit(
+                        "startDrawRound",
+                        {
+                            word:
+                                lobbies[data.lobbyId].playerContent[key][
+                                    lobbies[data.lobbyId].playerContent[key]
+                                        .length - 1
+                                ],
+                            round: lobbies[data.lobbyId].round,
+                        }
+                    );
+                }
+                lobbies[data.lobbyId].submitted = 0;
             }
-            lobbies[data.lobbyId].submitted = 0;
-            lobbies[data.lobbyId].round = 1;
         }
     });
 });
@@ -193,4 +212,15 @@ function playerSubmittedAnswer(data) {
             name: data.player,
         });
     }
+}
+
+function endRound(lobbyId) {
+    for (var key in lobbies[lobbyId].sockets) {
+        let socket = lobbies[lobbyId].sockets[key];
+        socket.emit("endGame", {
+            content: lobbies[lobbyId].playerContent,
+            players: lobbies[lobbyId].sendToPlayer,
+        });
+    }
+    lobbies[lobbyId];
 }
