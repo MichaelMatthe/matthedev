@@ -25,6 +25,11 @@ window.onload = function () {
     context = canvas.getContext("2d");
     boundings = canvas.getBoundingClientRect();
 
+    context.fillStyle = "#FFFFFF";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    // Create color buttons
+    setUpColors();
+
     guessCanvas = document.getElementById("guess-canvas");
     guessContext = guessCanvas.getContext("2d");
 
@@ -34,20 +39,6 @@ window.onload = function () {
     context.strokeStyle = "black"; // initial brush color
     context.lineWidth = 1; // initial brush width
     var isDrawing = false;
-
-    // Handle Colors
-    var colors = document.getElementsByClassName("colors")[0];
-
-    colors.addEventListener("click", function (event) {
-        context.strokeStyle = event.target.value || "black";
-    });
-
-    // Handle Brushes
-    var brushes = document.getElementsByClassName("brushes")[0];
-
-    brushes.addEventListener("click", function (event) {
-        context.lineWidth = event.target.value || 1;
-    });
 
     // Mouse Down Event
     canvas.addEventListener("mousedown", function (event) {
@@ -195,8 +186,11 @@ window.onload = function () {
         $("#playerOrder").append(row);
         $("#lobby").addClass("d-none");
         $("#playerOrder").removeClass("d-none");
-        $("#gameDiv").removeClass("d-none");
+        $("#playerOrder").addClass("d-flex");
+        $("#playerOrder").addClass("justify-content-center");
         $("#submitWord").removeClass("d-none");
+        $("#submitWord").addClass("d-flex");
+        $("#submitWord").addClass("justify-content-center");
     });
 
     socket.on("playerSubmitted", function (data) {
@@ -211,9 +205,7 @@ window.onload = function () {
         $("#guessWord").html(data.word);
         console.log("Start Draw Round", data);
         resetSubmitCircles();
-        $("#submitWord").addClass("d-none");
-        $("#guessCanvasDiv").addClass("d-none");
-        $("#drawCanvasDiv").removeClass("d-none");
+        showDrawing();
         resize();
     });
 
@@ -226,8 +218,7 @@ window.onload = function () {
         };
         image.src = data.image;
         resetSubmitCircles();
-        $("#drawCanvasDiv").addClass("d-none");
-        $("#guessCanvasDiv").removeClass("d-none");
+        showGuessing();
         resize();
     });
 };
@@ -264,6 +255,28 @@ function startGame() {
     socket.emit("startGame", { lobbyId: lobbyName });
 }
 
+function showDrawing() {
+    $("#drawCanvasDiv").removeClass("d-none");
+    notWaitingForPlayers();
+}
+
+function showGuessing() {
+    $("#guessCanvasDiv").removeClass("d-none");
+    notWaitingForPlayers();
+}
+
+function waitingForPlayers() {
+    $("#drawCanvasDiv").addClass("d-none");
+    $("#guessCanvasDiv").addClass("d-none");
+    $("#submitWord").addClass("d-none");
+
+    $("#waiting").removeClass("d-none");
+}
+
+function notWaitingForPlayers() {
+    $("#waiting").addClass("d-none");
+}
+
 function submitWord() {
     let word = $("#submitWordInput").val();
     socket.emit("submitWord", {
@@ -271,7 +284,9 @@ function submitWord() {
         lobbyId: lobbyName,
         word: word,
     });
-    $("#submitWord").addClass("d-none");
+    $("#submitWord").removeClass("d-flex");
+    $("#submitWord").removeClass("justify-content-center");
+    waitingForPlayers();
 }
 
 function submitDraw() {
@@ -280,6 +295,7 @@ function submitDraw() {
         lobbyId: lobbyName,
         image: canvas.toDataURL(),
     });
+    waitingForPlayers();
 }
 
 function submitGuess() {
@@ -291,6 +307,7 @@ function submitGuess() {
     });
 
     $("#guessInput").val("");
+    waitingForPlayers();
 }
 
 function resetSubmitCircles() {
@@ -299,4 +316,88 @@ function resetSubmitCircles() {
             player + "SubmittedCircle"
         ).style.backgroundColor = "#8a8a8a";
     });
+}
+
+function setUpColors() {
+    let colors = [
+        "#1a1a1a",
+        "#4d4d4d",
+        "#999999",
+        "#cccccc",
+        "#ffffff",
+        "#46516e",
+        "#858fab",
+        "#b8c0d9",
+        "#403631",
+        "#786654",
+        "#c7b48b",
+        "#fff7c4",
+        "#751e21",
+        "#a30f11",
+        "#d4151f",
+        "#ff4050",
+        "#995943",
+        "#f28135",
+        "#ffc96b",
+        "#3b1c70",
+        "#402c99",
+        "#3952c4",
+        "#6c94f0",
+        "#70e5ff",
+        "#6a24a8",
+        "#9c45e3",
+        "#c380ff",
+        "#ea9efc",
+        "#0a4d2d",
+        "#089050",
+        "#70d038",
+        "#b4e448",
+    ];
+    let row = document.createElement("div");
+    row.classList.add("row");
+    let rows = [];
+    rows.push(row);
+    for (var i = 0; i < colors.length; i++) {
+        let color = colors[i];
+        let colorButton = document.createElement("button");
+        colorButton.classList.add("colorsButton");
+        colorButton.style.backgroundColor = color;
+
+        colorButton.addEventListener("click", function (event) {
+            context.strokeStyle = color;
+        });
+
+        row.appendChild(colorButton);
+        if ((i + 1) % 8 == 0) {
+            row = document.createElement("div");
+            row.classList.add("row");
+            rows.push(row);
+        }
+    }
+    rows.forEach((row) => {
+        document.getElementById("colors").appendChild(row);
+    });
+
+    document.getElementById("brushes").style.width = "20px";
+    [1, 5, 10, 20].forEach((size) => {
+        let brushButton = document.createElement("button");
+        brushButton.classList.add("brushButton");
+        brushButton.classList.add("row");
+        brushButton.style.display = "flex";
+        brushButton.style.justifyContent = "center";
+        brushButton.style.alignItems = "center";
+
+        let brushDiv = document.createElement("div");
+        brushDiv.style.backgroundColor = "black";
+        brushDiv.style.borderRadius = "50%";
+        brushDiv.style.width = size + "px";
+        brushDiv.style.height = size + "px";
+        brushButton.appendChild(brushDiv);
+        document.getElementById("brushes").appendChild(brushButton);
+        brushButton.addEventListener("click", function (event) {
+            context.lineWidth = size;
+        });
+    });
+
+    // TODO Eraser
 }

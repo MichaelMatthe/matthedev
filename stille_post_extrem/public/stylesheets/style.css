@@ -3,6 +3,7 @@
     width: 20px;
     background-color: #8a8a8a;
     border-radius: 50%;
+    border: 1px solid black;
 }
 
 .left {
@@ -26,5 +27,50 @@
 }
 
 .main-container {
-    background-color: grey;
+    background-color: #b0b0b0;
+    height: 1200px;
+}
+
+* {
+    font-family: "Bree Serif";
+}
+
+.canvasHeading {
+    font-size: 30px;
+    padding: 5px;
+}
+
+.colorsButton {
+    display: inline-block;
+    border: 1px solid #00000026;
+    border-radius: 0;
+    outline: none;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    margin: 2px;
+}
+
+.brushButton {
+    display: inline-block;
+    border: 1px solid #00000026;
+    border-radius: 0;
+    outline: none;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    margin: 2px;
+}
+
+.colorPalette {
+    margin: 5px;
+}
+
+.brushes {
+    margin: 5px;
+    margin-left: 10px;
+}
+
+.drawButtons {
+    margin: 5px;
 }

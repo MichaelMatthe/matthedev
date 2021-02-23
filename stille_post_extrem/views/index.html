@@ -43,17 +43,22 @@
 
     <div class="d-none" id="playerOrder">
     </div>
+
+    <div id="waiting" class="d-none">
+        <div class="container d-flex justify-content-center">
+            Waiting for others...
+            <i class="fas fa-atom fa-spin p-1"></i>
+        </div>
+    </div>
     
-    <div class="d-none container" id="gameDiv">
+    <div class="container" id="gameDiv">
         <div class="d-none" id="submitWord">
             <input type="text" id="submitWordInput"></input>
             <button id="submitWordButton">Submit</button>
         </div>
-        <div class="d-none" id="CurrentPlayerDiv">
-            <div class="d-flex justify-content-center" id="currentPlayerWord">Player X's Word</div>
-        </div>
-        <div class="d-none" id="drawCanvasDiv">
-            <div id="guessWord"></div>
+        <div class="d-none p-3" id="drawCanvasDiv">
+            <div class="d-flex justify-content-center canvasHeading">Draw</div>
+            <div class="d-flex justify-content-center" id="guessWord"></div>
             <div class="d-flex justify-content-center">
                 <canvas
                     id="paint-canvas"
@@ -62,24 +67,22 @@
                     height="600"
                 ></canvas>
             </div>
-            <div class="d-flex justify-content-center">
-                <div class="colors">
-                    <button type="button" value="#FF0000">Red</button>
-                    <button type="button" value="#00FF00">Green</button>
-                    <button type="button" value="#0000FF">Blue</button>
+            <div class="row m-0">
+                <div class="col-2"></div>
+                <div id="colors" class="colorPalette col-4 p-0">
+                    
                 </div>
-                <div class="brushes">
-                    <button type="button" value="1">1</button>
-                    <button type="button" value="2">2</button>
-                    <button type="button" value="3">3</button>
+                <div id="brushes" class="brushes col-1 p-0">
                 </div>
-                <div class="buttons">
+                <div id="drawButtons" class="drawButtons col-3 p-0">
                     <button id="clear" type="button">Clear</button>
                     <button id="submitDraw" type="button">Submit</button>
                 </div>
+                <div class="col-2"></div>
             </div>
         </div>
-        <div class="d-none" id="guessCanvasDiv">
+        <div class="d-none p-3" id="guessCanvasDiv">
+            <div class="d-flex justify-content-center canvasHeading">Guess</div>
             <div class="d-flex justify-content-center" id="guessCanvasDiv">
                 <canvas
                     id="guess-canvas"
@@ -102,6 +105,7 @@
     integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
     crossorigin="anonymous"
 ></script>
+<script type='text/javascript' src='http://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.4.0/fabric.min.js'></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.1/socket.io.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="javascripts/game.js"></script>
