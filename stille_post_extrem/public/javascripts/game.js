@@ -41,6 +41,12 @@ window.onload = function () {
     guessCanvas = document.getElementById("guess-canvas");
     guessContext = guessCanvas.getContext("2d");
 
+    document
+        .getElementById("brushRange")
+        .addEventListener("change", function () {
+            canvas.freeDrawingBrush.width = $("#brushRange").val();
+        });
+
     // Handle Clear Button
     var clearButton = document.getElementById("clear");
 
@@ -57,6 +63,11 @@ window.onload = function () {
         );
     });
 
+    // eraser
+    document.getElementById("eraser").addEventListener("click", function () {
+        canvas.freeDrawingBrush.color = "#FFFFFF";
+    });
+
     // update join / create lobby button
     query = window.location.href.split("?")[1];
     let lobbyButton = document.getElementById("joinButton");
@@ -70,6 +81,19 @@ window.onload = function () {
 
     $("#nameForm").on("submit", function (e) {
         e.preventDefault();
+    });
+
+    $("#submitWordForm").on("submit", function (e) {
+        e.preventDefault();
+    });
+
+    $("#undoButton").on("click", function (e) {
+        if (canvas.historyUndo.length > 1) {
+            canvas.undo();
+        }
+    });
+    $("#redoButton").on("click", function (e) {
+        canvas.redo();
     });
 
     $("#copyLobbyId").click(function () {
@@ -89,7 +113,8 @@ window.onload = function () {
     $("#submitGuess").click(submitGuess);
 
     // socket stuff
-    socket = io.connect("192.168.0.7:8040", {
+    socket = io.connect(
+        // WS-IP "192.168.0.7:8040",{
         reconnect: true,
         transports: ["websocket"],
         forceNew: true,
@@ -346,7 +371,7 @@ function resetSubmitCircles() {
 
 function setUpColors() {
     let colors = [
-        "#1a1a1a",
+        "#000000",
         "#4d4d4d",
         "#999999",
         "#cccccc",
@@ -395,7 +420,7 @@ function setUpColors() {
         });
 
         row.appendChild(colorButton);
-        if ((i + 1) % 16 == 0) {
+        if ((i + 1) % 8 == 0) {
             row = document.createElement("div");
             row.classList.add("row");
             rows.push(row);
@@ -418,6 +443,9 @@ function setUpColors() {
         brushButton.style.width = "30px";
         brushButton.style.height = "30px";
         brushButton.style.padding = "0px";
+        brushButton.classList.add("btn");
+        brushButton.classList.add("btn-light");
+        brushButton.classList.add("m-1");
 
         let brushDiv = document.createElement("div");
         brushDiv.style.backgroundColor = "black";
@@ -428,6 +456,7 @@ function setUpColors() {
         document.getElementById("brushes").appendChild(brushButton);
         brushButton.addEventListener("click", function (event) {
             canvas.freeDrawingBrush.width = size;
+            $("#brushRange").val(size);
         });
     }
 

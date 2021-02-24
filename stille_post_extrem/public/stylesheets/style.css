@@ -50,13 +50,13 @@ body {
 
 .colorsButton {
     display: inline-block;
-    border: 1px solid #00000026;
+    border: 1px solid #404040;
     border-radius: 0;
     outline: none;
     cursor: pointer;
     width: 20px;
     height: 20px;
-    margin: 2px;
+    margin: 1px;
 }
 
 .colorPalette {

@@ -6,8 +6,8 @@ router.get("/", function (req, res, next) {
     res.render("index", { title: "matthe.dev" });
 });
 
-router.get("/stillepost", function (req, res, next) {
-    res.render("stillepost", { title: "matthe.dev" });
+router.get("/orbiting", function (req, res, next) {
+    res.render("orbiting", { title: "matthe.dev" });
 });
 
 module.exports = router;
