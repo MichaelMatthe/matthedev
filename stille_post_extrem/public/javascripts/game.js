@@ -114,11 +114,13 @@ window.onload = function () {
 
     // socket stuff
     socket = io.connect(
-        // WS-IP "192.168.0.7:8040",{
-        reconnect: true,
-        transports: ["websocket"],
-        forceNew: true,
-    });
+        // WS-IP "192.168.0.7:8040",
+        {
+            reconnect: true,
+            transports: ["websocket"],
+            forceNew: true,
+        }
+    );
 
     socket.on("connect", function (data) {
         console.log("connected");
