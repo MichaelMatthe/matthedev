@@ -23,7 +23,7 @@ window.onload = function () {
     // Definitions
     canvas = new fabric.Canvas("paint-canvas");
     canvas.isDrawingMode = true;
-    canvas.freeDrawingBrush.width = 20;
+    canvas.freeDrawingBrush.width = 5;
     canvas.freeDrawingBrush.color = "#000000";
     canvas.add(
         new fabric.Rect({
@@ -58,10 +58,9 @@ window.onload = function () {
     });
 
     // update join / create lobby button
-    query = window.location.href.split("/")[3];
+    query = window.location.href.split("?")[1];
     let lobbyButton = document.getElementById("joinButton");
-    if (query != "") {
-        console.log("change");
+    if (query != undefined) {
         lobbyButton.innerHTML = "Join Lobby";
         lobbyButton.onclick = joinLobby;
     } else {
@@ -104,18 +103,15 @@ window.onload = function () {
         lobbyName = data.lobbyId;
         lobbyPlayers = data.players;
         data.players.forEach((player) => {
-            $("#players").append("<div>" + player + "</div>");
+            $("#players").append("<div class='whiteFont'>" + player + "</div>");
         });
-        $("#lobbyId").html(
-            window.location.href.split("/").splice(0, 3).join("/") +
-                "/?" +
-                data.lobbyId
-        );
-        $("#lobbyIdInput").val(
-            window.location.href.split("/").splice(0, 3).join("/") +
-                "/?" +
-                data.lobbyId
-        );
+        if (window.location.href.includes("?")) {
+            $("#lobbyIdInput").val(window.location.href);
+        } else {
+            $("#lobbyIdInput").val(
+                window.location.href.split("?")[0] + "/?" + data.lobbyId
+            );
+        }
 
         $("#lobbyCreator").addClass("d-none");
         $("#lobby").removeClass("d-none");
@@ -125,7 +121,7 @@ window.onload = function () {
     socket.on("playerJoinsLobby", function (data) {
         console.log(data.name);
         lobbyPlayers.push(data.name);
-        $("#players").append("<div>" + data.name + "</div>");
+        $("#players").append("<div class='whiteFont'>" + data.name + "</div>");
     });
 
     socket.on("startGame", function (data) {
@@ -145,11 +141,12 @@ window.onload = function () {
             nameDiv.innerHTML = players[i];
             //nameDiv.style.width = "150px";
             nameDiv.classList.add("m-1");
+            nameDiv.classList.add("whiteFont");
             row.appendChild(nameDiv);
 
             if (i < players.length - 1) {
                 let arrowDiv = document.createElement("img");
-                arrowDiv.src = "images/arrow.svg";
+                arrowDiv.src = "/images/arrow.svg";
                 arrowDiv.width = "30";
                 arrowDiv.height = "30";
                 arrowDiv.classList.add("right");
@@ -206,13 +203,12 @@ window.onload = function () {
     });
 
     socket.on("error", function (data) {
-        console.log(data.message);
+        console.log("socket error", data.message);
     });
 };
 
 function createLobby() {
     if ($("#nameInput").val() != "") {
-        console.log("create lobby");
         playerName = $("#nameInput").val();
         $("#startButton").removeClass("d-none");
         socket.emit("createLobby", { name: playerName });
@@ -223,11 +219,10 @@ function createLobby() {
 
 function joinLobby() {
     if ($("#nameInput").val() != "") {
-        console.log("join lobby");
         playerName = $("#nameInput").val();
         socket.emit("joinLobby", {
             name: playerName,
-            lobbyId: query.replace("?", ""),
+            lobbyId: query,
         });
     } else {
         console.log("enter name");
@@ -262,18 +257,21 @@ function endGame(data) {
 
     for (var player in content) {
         let nameDiv = document.createElement("div");
-        nameDiv.innerHTML = player + "'s Wort: " + content[currentPlayer][0];
+        nameDiv.classList.add("whiteFont");
+        nameDiv.innerHTML = player + "'s Wort: " + content[player][0];
         $("#results").append(nameDiv);
 
-        currentPlayer = player;
+        let currentPlayer = players[player];
         for (var i = 1; i < content[player].length; i++) {
             if (i % 2 == 0) {
                 let div = document.createElement("div");
+                div.classList.add("whiteFont");
                 div.innerHTML =
                     currentPlayer + "'s Guess: " + content[currentPlayer][i];
                 $("#results").append(div);
             } else {
                 let div = document.createElement("div");
+                div.classList.add("whiteFont");
                 div.innerHTML = currentPlayer + "'s Drawing:";
                 $("#results").append(div);
                 let canvas = document.createElement("canvas");

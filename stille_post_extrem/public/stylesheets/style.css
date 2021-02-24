@@ -1,3 +1,11 @@
+body {
+    background: url("/images/background.svg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
 .dot-grey {
     height: 20px;
     width: 20px;
@@ -27,8 +35,8 @@
 }
 
 .main-container {
-    background-color: #b0b0b0;
-    height: 1200px;
+    background-color: #121212;
+    height: 100%;
 }
 
 * {
@@ -53,4 +61,12 @@
 
 .colorPalette {
     border: 1px solid black;
+}
+
+.whiteFont {
+    color: white;
+}
+
+.site-header {
+    background-color: #080808;
 }

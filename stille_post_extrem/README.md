@@ -2,8 +2,12 @@
 
 -   connect
 -   joinLobby
-    -   lobbyId: String
-    -   players: []
+
+```json
+lobbyId: String
+players: []
+```
+
 -   playerJoinsLobby
     -   name: String
 -   startGame

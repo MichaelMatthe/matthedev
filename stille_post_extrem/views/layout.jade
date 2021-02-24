@@ -2,9 +2,17 @@ doctype html
 html
   head
     title= title
+
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css')
     link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css')
     link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Bree+Serif')
+
+    script(src="https://code.jquery.com/jquery-3.5.1.min.js")
+    script(src='http://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.4.0/fabric.min.js')
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.1/socket.io.min.js")
+    script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js")
   body
+    include header.html
+
     block content
