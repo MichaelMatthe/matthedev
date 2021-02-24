@@ -4,8 +4,10 @@
 -   joinLobby
 
 ```json
+{
 lobbyId: String
 players: []
+}
 ```
 
 -   playerJoinsLobby
