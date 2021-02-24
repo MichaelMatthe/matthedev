@@ -5,8 +5,8 @@
 
 ```javascript
 {
-    lobbyId: String;
-    players: [];
+    lobbyId: String,
+    players: [],
 }
 ```
 
