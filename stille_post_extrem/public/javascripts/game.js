@@ -129,9 +129,7 @@ window.onload = function () {
 
     // socket stuff
 
-    socket.on("connect", function (data) {
-        console.log("connected");
-    });
+    socket.on("connect", function (data) {});
 
     socket.on("joinLobby", function (data) {
         lobbyName = data.lobbyId;

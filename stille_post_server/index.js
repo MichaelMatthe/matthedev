@@ -67,7 +67,6 @@ io.on("connection", function (socket) {
     });
 
     socket.on("startGame", function (data) {
-        console.log(lobbies[data.lobbyId].sockets);
         // randomize player order
         shuffle(lobbies[data.lobbyId].players);
         lobbies[data.lobbyId].submitted = 0;
@@ -84,7 +83,6 @@ io.on("connection", function (socket) {
                     (i + 1) % lobbies[data.lobbyId].players.length
                 ];
             lobbies[data.lobbyId].sendToPlayer[curPlayer] = nextPlayer;
-            console.log(curPlayer, nextPlayer);
         }
 
         for (var key in lobbies[data.lobbyId].sockets) {
