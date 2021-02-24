@@ -27,7 +27,7 @@ const io = require("socket.io")(server);
 if (process.env.PROD) {
     server.listen(7040);
 } else {
-    server.listen(8040);
+    server.listen(7040);
 }
 log("Starte Websocket Server");
 
