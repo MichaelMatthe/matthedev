@@ -11,6 +11,8 @@ var playerName;
 
 var lobbyPlayers;
 
+var initialBrushWidth = 5;
+
 window.onload = function () {
     $("#addButton").click(function () {
         $("#testDiv").addClass("d-none");
@@ -23,7 +25,7 @@ window.onload = function () {
     // Definitions
     canvas = new fabric.Canvas("paint-canvas");
     canvas.isDrawingMode = true;
-    canvas.freeDrawingBrush.width = 5;
+    canvas.freeDrawingBrush.width = initialBrushWidth;
     canvas.freeDrawingBrush.color = "#000000";
     canvas.add(
         new fabric.Rect({
@@ -34,6 +36,7 @@ window.onload = function () {
             height: canvas.height,
         })
     );
+    $("#brushRange").val(initialBrushWidth);
 
     // Create color buttons
     setUpColors();
@@ -114,7 +117,7 @@ window.onload = function () {
 
     // socket stuff
     socket = io.connect(
-        // WS-IP "192.168.0.7:8040",
+        "127.0.0.1:8040", // WS-IP
         {
             reconnect: true,
             transports: ["websocket"],
@@ -433,7 +436,7 @@ function setUpColors() {
     });
 
     // brushes
-    let brushSizes = [1, 5, 10, 20];
+    let brushSizes = [1, 5, 10, 20, 50];
     for (var i = 0; i < brushSizes.length; i++) {
         let size = brushSizes[i];
 
@@ -449,17 +452,30 @@ function setUpColors() {
         brushButton.classList.add("btn-light");
         brushButton.classList.add("m-1");
 
-        let brushDiv = document.createElement("div");
-        brushDiv.style.backgroundColor = "black";
-        brushDiv.style.borderRadius = "50%";
-        brushDiv.style.width = size + "px";
-        brushDiv.style.height = size + "px";
-        brushButton.appendChild(brushDiv);
-        document.getElementById("brushes").appendChild(brushButton);
-        brushButton.addEventListener("click", function (event) {
-            canvas.freeDrawingBrush.width = size;
-            $("#brushRange").val(size);
-        });
+        if (size != 50) {
+            let brushDiv = document.createElement("div");
+            brushDiv.style.backgroundColor = "black";
+            brushDiv.style.borderRadius = "50%";
+            brushDiv.style.width = size + "px";
+            brushDiv.style.height = size + "px";
+            brushButton.appendChild(brushDiv);
+            document.getElementById("brushes").appendChild(brushButton);
+            brushButton.addEventListener("click", function (event) {
+                canvas.freeDrawingBrush.width = size;
+                $("#brushRange").val(size);
+            });
+        } else {
+            brushButton.style.backgroundColor = "black";
+            brushButton.style.color = "white";
+            brushButton.style.fontSize = "0.7rem";
+            brushButton.classList.add("whiteFont");
+            brushButton.innerHTML = "MAX";
+            document.getElementById("brushes").appendChild(brushButton);
+            brushButton.addEventListener("click", function (event) {
+                canvas.freeDrawingBrush.width = size;
+                $("#brushRange").val(size);
+            });
+        }
     }
 
     // TODO Eraser
