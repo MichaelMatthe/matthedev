@@ -50,14 +50,14 @@
     </div>
 
     <div id="waiting" class="d-none">
-        <div class="container d-flex justify-content-center whiteFont p-3">
+        <div class="container d-flex justify-content-center whiteFont p-1">
             Waiting for others...
             <i class="fas fa-atom fa-spin p-1 whiteFont"></i>
         </div>
     </div>
     
     <div class="d-none" id="submitWord">
-        <div class="d-flex justify-content-center p-5">
+        <div class="d-flex justify-content-center p-3">
             <div class="d-flex flex-column">
                 <div class="d-flex justify-content-center canvasHeading p-3 whiteFont">Submit Word</div>
                 <form id="submitWordForm">
@@ -73,7 +73,7 @@
     </div>
 
     <div class="p-3" id="drawCanvasDiv">
-        <div class="d-flex justify-content-center canvasHeading p-3 whiteFont">Draw</div>
+        <div class="d-flex justify-content-center canvasHeading p-1 whiteFont">Draw</div>
         <div class="d-flex justify-content-center whiteFont" id="guessWord"></div>
         <div class="container">
             <div class="d-flex justify-content-center">
@@ -86,6 +86,7 @@
             </div>
 
             <div class="d-flex flex-row justify-content-center m-3">
+                <input type="color" id="colorPicker" value="#000000" style="width: 60px; height: 90px">
                 <div class="p-1" style="width: 200px">
                     <div id="colors" class="d-flex flex-column pl-3"></div>
                 </div>
@@ -103,8 +104,12 @@
                         </button>
                     </div>
                     <div class="d-flex flex-column">
-                        <button class="btn btn-light m-1" id="eraser" type="button">Eraser</button>
-                        <button class="btn btn-light m-1" id="clear" type="button">Clear</button>
+                        <button class="btn btn-light m-1" id="eraser" type="button">
+                            <i class="fas fa-eraser"></i>
+                        </button>
+                        <button class="btn btn-light m-1" id="clear" type="button">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </div>
                     <button class="btn btn-light mt-1 mb-2" id="submitDraw" type="button">Submit</button>
                 </div>

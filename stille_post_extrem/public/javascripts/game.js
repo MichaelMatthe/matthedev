@@ -14,6 +14,15 @@ var lobbyPlayers;
 var initialBrushWidth = 5;
 
 window.onload = function () {
+    socket = io.connect(
+        //"127.0.0.1:8040", // WS-IP
+        {
+            reconnect: true,
+            transports: ["websocket"],
+            forceNew: true,
+        }
+    );
+
     $("#addButton").click(function () {
         $("#testDiv").addClass("d-none");
     });
@@ -37,6 +46,9 @@ window.onload = function () {
         })
     );
     $("#brushRange").val(initialBrushWidth);
+    $("#colorPicker").on("input", function () {
+        canvas.freeDrawingBrush.color = $("#colorPicker").val();
+    });
 
     // Create color buttons
     setUpColors();
@@ -116,14 +128,6 @@ window.onload = function () {
     $("#submitGuess").click(submitGuess);
 
     // socket stuff
-    socket = io.connect(
-        "127.0.0.1:8040", // WS-IP
-        {
-            reconnect: true,
-            transports: ["websocket"],
-            forceNew: true,
-        }
-    );
 
     socket.on("connect", function (data) {
         console.log("connected");
@@ -422,6 +426,7 @@ function setUpColors() {
 
         colorButton.addEventListener("click", function (event) {
             canvas.freeDrawingBrush.color = color;
+            $("#colorPicker").val(color);
         });
 
         row.appendChild(colorButton);
