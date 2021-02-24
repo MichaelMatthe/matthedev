@@ -3,10 +3,10 @@
 -   connect
 -   joinLobby
 
-```json
+```javascript
 {
-lobbyId: String
-players: []
+    lobbyId: String;
+    players: [];
 }
 ```
 
