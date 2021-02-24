@@ -28,7 +28,6 @@ if (process.env.PROD) {
 } else {
     server.listen(8040);
 }
-server.listen(8040);
 log("Starte Websocket Server");
 
 io.on("connection", function (socket) {
