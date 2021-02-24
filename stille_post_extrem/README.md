@@ -11,21 +11,61 @@
 ```
 
 -   playerJoinsLobby
-    -   name: String
+
+```javascript
+{
+    name: String,
+}
+```
+
 -   startGame
-    -   players: []
+
+```javascript
+{
+    players: [],
+}
+```
+
 -   playerSubmittedAnswer
-    -   player: String
+
+```javascript
+{
+    player: String,
+}
+```
 
 # client emits
 
 -   joinLobby
-    -   name: String
-    -   lobbyId: String
+
+```javascript
+{
+    name: String,
+    lobbyId: String,
+}
+```
+
 -   createLobby
-    -   name: String
+
+```javascript
+{
+    name: String,
+}
+```
+
 -   startGame
-    -   lobbyId: String
+
+```javascript
+{
+    lobbyId: String,
+}
+```
+
 -   submitAnswer
-    -   image: String
-    -   guess: String
+
+```javascript
+{
+    image: String,
+    guess: String,
+}
+```
