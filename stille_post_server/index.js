@@ -6,6 +6,7 @@ var app = express();
 var server = http.createServer(app);
 var crypto = require("crypto");
 var clients = [];
+require("dotenv").config();
 
 //
 var lobbies = {};
