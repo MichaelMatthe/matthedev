@@ -85,7 +85,6 @@ io.on("connection", function (socket) {
         for (var key in lobbies[data.lobbyId].sockets) {
             lobbies[data.lobbyId].sockets[key].emit("startGame", {
                 players: lobbies[data.lobbyId].players,
-                sendToPlayer: lobbies[data.lobbyId].sendToPlayer,
             });
         }
     });
@@ -107,6 +106,7 @@ io.on("connection", function (socket) {
                     "startDrawRound",
                     {
                         word: lobbies[data.lobbyId].playerContent[key][0],
+                        round: lobbies[data.lobbyId].round,
                     }
                 );
             }

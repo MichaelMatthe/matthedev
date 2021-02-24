@@ -34,6 +34,32 @@
 }
 ```
 
+-   playerJoinsLobby
+
+```javascript
+{
+    name: String,
+}
+```
+
+-   startDrawRound
+
+```javascript
+{
+    word: String,
+    round: number,
+}
+```
+
+-   startGuessRound
+
+```javascript
+{
+    image: String,
+    round: number,
+}
+```
+
 # client emits
 
 -   joinLobby
@@ -61,11 +87,22 @@
 }
 ```
 
--   submitAnswer
+-   submitDrawing
 
 ```javascript
 {
+    player: String,
+    lobbyId: String,
     image: String,
-    guess: String,
+}
+```
+
+-   submitGuess
+
+```javascript
+{
+    player: String,
+    lobbyId: String,
+    word: String,
 }
 ```
