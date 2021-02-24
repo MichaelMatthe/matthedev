@@ -10,4 +10,8 @@ router.get("/orbiting", function (req, res, next) {
     res.render("orbiting", { title: "matthe.dev" });
 });
 
+router.get("*", function (req, res, next) {
+    res.render("404", { title: "matthe.dev" });
+});
+
 module.exports = router;
