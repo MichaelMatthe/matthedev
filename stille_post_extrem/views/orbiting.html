@@ -91,6 +91,11 @@
                     <div id="colors" class="d-flex flex-column pl-3"></div>
                 </div>
                 <div class="p-1">
+                    <button class="btn btn-light m-1" id="fillButton" type="button">
+                        <i class="fas fa-fill-drip"></i>
+                    </button>
+                </div>
+                <div class="p-1">
                     <div id="brushes" class="d-flex flex-row"></div>
                     <input type="range" class="form-range" min="1" max="50" step="1" id="brushRange" style="width: 100%">
                 </div>
@@ -139,13 +144,5 @@
         <div id="results"></div>
     </div>
 </div>
-<script type="text/javascript" src="/javascripts/paint-bucket.js"></script>
-<script type="text/javascript"> $(document).ready(function () {
-    	 paintBucketApp.init();
-});</script>
-<div class="container">
-
-</div>
-</body>
 
 <script src="/javascripts/game.js"></script>

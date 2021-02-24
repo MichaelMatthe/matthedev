@@ -13,9 +13,11 @@ var lobbyPlayers;
 
 var initialBrushWidth = 5;
 
+var bucketFill = false;
+
 window.onload = function () {
     socket = io.connect(
-        //"127.0.0.1:8040", // WS-IP
+        "127.0.0.1:8040", // WS-IP
         {
             reconnect: true,
             transports: ["websocket"],
@@ -33,6 +35,7 @@ window.onload = function () {
 
     // Definitions
     canvas = new fabric.Canvas("paint-canvas");
+    canvas.allowTouchScrolling = false;
     canvas.isDrawingMode = true;
     canvas.freeDrawingBrush.width = initialBrushWidth;
     canvas.freeDrawingBrush.color = "#000000";
@@ -82,6 +85,13 @@ window.onload = function () {
     document.getElementById("eraser").addEventListener("click", function () {
         canvas.freeDrawingBrush.color = "#FFFFFF";
     });
+
+    // fill tool
+    document
+        .getElementById("fillButton")
+        .addEventListener("click", function () {
+            var bucketFill = true;
+        });
 
     // update join / create lobby button
     query = window.location.href.split("?")[1];
