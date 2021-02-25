@@ -42,14 +42,14 @@
                 </button>
             </div>
             <div id="players" class="d-flex flex-column"></div>
-            <button class="btn btn-light col-sm-2" id="startButton" class="d-none">Start</button>
+            <button class="btn btn-light col-sm-2 d-none" id="startButton">Start</button>
         </div>
     </div>
 
     <div class="d-none p-3" id="playerOrder">
     </div>
 
-    <div id="waiting" class="d-none">
+    <div id="waiting" class="d-none p-3">
         <div class="container d-flex justify-content-center whiteFont p-1">
             Waiting for others...
             <i class="fas fa-atom fa-spin p-1 whiteFont"></i>
@@ -142,6 +142,35 @@
     <div class="d-none p-3" id="resultDiv">
         <div class="d-flex justify-content-center canvasHeading p-3 whiteFont">Results</div>
         <div id="results"></div>
+    </div>
+
+    <div class="d-none p-3" id="resultDivNew">
+        <h1 class="d-flex justify-content-center p-3 whiteFont">Results</h1>
+        <div id="resultCopyDiv">
+            <div id="results">
+                <div id="resultPlayerButtons" class="d-flex flex-row justify-content-center p-1" style="background-color: #080808;">
+                </div>
+                <div class="d-none d-flex flex-column" style="background-color: #181818;">
+                    <div class="d-flex flex-row justify-content-center p-3">
+                        <h2 class="whiteFont"></h2>
+                    </div>
+                    <div class="d-flex flex-row justify-content-center">
+                        <div class="d-flex flex-row justify-content-center p-3">
+                            <div class="d-flex flex-column justify-content-center">
+                                <h3 class="whiteFont">Player Name 0</h3>
+                                <h4 class="whiteFont">Word 0</h4>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column justify-content-center p-3">
+                            <div class="d-flex flex-row justify-content-center">
+                                <h3 class="whiteFont">Player Name 1</h3>
+                            </div>
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Mainz_altstadt.jpg/250px-Mainz_altstadt.jpg" width="600" height="450">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
