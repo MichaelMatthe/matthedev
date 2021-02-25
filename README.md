@@ -1,0 +1,4 @@
+# Server
+
+-   supervisorctl
+    -   restart <name>

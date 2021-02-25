@@ -13,8 +13,6 @@ var lobbyPlayers;
 
 var initialBrushWidth = 5;
 
-var bucketFill = false;
-
 window.onload = function () {
     socket = io.connect(
         //"127.0.0.1:7040", // WS-IP
@@ -35,7 +33,6 @@ window.onload = function () {
 
     // Definitions
     canvas = new fabric.Canvas("paint-canvas");
-    canvas.allowTouchScrolling = false;
     canvas.isDrawingMode = true;
     canvas.freeDrawingBrush.width = initialBrushWidth;
     canvas.freeDrawingBrush.color = "#000000";
@@ -48,6 +45,8 @@ window.onload = function () {
             height: canvas.height,
         })
     );
+    initFillBucket();
+
     $("#brushRange").val(initialBrushWidth);
     $("#colorPicker").on("input", function () {
         canvas.freeDrawingBrush.color = $("#colorPicker").val();
@@ -79,18 +78,20 @@ window.onload = function () {
                 height: canvas.height,
             })
         );
+        enableDrawing();
     });
 
     // eraser
     document.getElementById("eraser").addEventListener("click", function () {
         canvas.freeDrawingBrush.color = "#FFFFFF";
+        enableDrawing();
     });
 
     // fill tool
     document
         .getElementById("fillButton")
         .addEventListener("click", function () {
-            var bucketFill = true;
+            enableFillBucket();
         });
 
     // update join / create lobby button
@@ -246,6 +247,25 @@ window.onload = function () {
 
     socket.on("error", function (data) {
         console.log("socket error", data.message);
+    });
+
+    // Fill Bucket
+    canvas.on("mouse:down", function (options) {
+        if (fillBucket) {
+            let tmpColorLayerData = document
+                .getElementById("paint-canvas")
+                .getContext("2d")
+                .getImageData(0, 0, canvasWidth, canvasHeight);
+
+            fillCollorAtCoords(
+                options.e.offsetX,
+                options.e.offsetY,
+                tmpColorLayerData,
+                canvas.width,
+                canvas.height,
+                canvas.data
+            );
+        }
     });
 };
 
@@ -449,7 +469,7 @@ function setUpColors() {
     });
 
     // brushes
-    let brushSizes = [1, 5, 10, 20, 50];
+    let brushSizes = [1, 5, 10, 20, 100];
     for (var i = 0; i < brushSizes.length; i++) {
         let size = brushSizes[i];
 
@@ -465,7 +485,7 @@ function setUpColors() {
         brushButton.classList.add("btn-light");
         brushButton.classList.add("m-1");
 
-        if (size != 50) {
+        if (size != brushSizes[4]) {
             let brushDiv = document.createElement("div");
             brushDiv.style.backgroundColor = "black";
             brushDiv.style.borderRadius = "50%";
@@ -476,6 +496,7 @@ function setUpColors() {
             brushButton.addEventListener("click", function (event) {
                 canvas.freeDrawingBrush.width = size;
                 $("#brushRange").val(size);
+                enableDrawing();
             });
         } else {
             brushButton.style.backgroundColor = "black";
@@ -487,9 +508,23 @@ function setUpColors() {
             brushButton.addEventListener("click", function (event) {
                 canvas.freeDrawingBrush.width = size;
                 $("#brushRange").val(size);
+                enableDrawing();
             });
         }
     }
+}
 
-    // TODO Eraser
+function enableDrawing() {
+    console.log("Drawing");
+    canvas.isDrawingMode = true;
+    fillBucket = false;
+}
+
+function enableFillBucket() {
+    console.log("fillBucket", fillBucket);
+    canvas.isDrawingMode = false;
+    fillBucket = true;
+    for (var obj in canvas._objects) {
+        canvas._objects[obj].selectable = false;
+    }
 }

@@ -1,34 +1,15 @@
-var canvas = new fabric.Canvas("testCanvas", {
-    selection: false,
-    isDrawingMode: true,
-});
-canvas.freeDrawingBrush.width = 20;
-
 var fillBucket = false;
 
-canvas.add(
-    new fabric.Rect({
-        left: 0,
-        top: 0,
-        fill: "white",
-        width: canvas.width,
-        height: canvas.height,
-    })
-);
-
 var colorLayerData;
-var canvasWidth = canvas.width;
-var canvasHeight = canvas.height;
-var fillColor = {
-    r: 255,
-    g: 0,
-    b: 0,
-};
+var fillColor;
+
+var canvasWidth;
+var canvasHeight;
 
 var drawingAreaX = 0;
 var drawingAreaY = 0;
-var drawingAreaWidth = canvas.width;
-var drawingAreaHeight = canvas.height;
+var drawingAreaWidth;
+var drawingAreaHeight;
 
 function floodFill(startX, startY, startR, startG, startB) {
     var newPos,
@@ -141,69 +122,54 @@ function paintAt(startX, startY) {
     floodFill(startX, startY, r, g, b);
 }
 
-function fillCollorAtCoords(xCoord, yCoord, fillColorTmp, width, height) {
+function fillCollorAtCoords(xCoord, yCoord, tmpColorLayerData, width, height) {
     let tmpCanvas = document.createElement("canvas");
     let tmpContext = tmpCanvas.getContext("2d");
     tmpCanvas.width = width;
     tmpCanvas.height = height;
+    colorLayerData = tmpColorLayerData;
 
-    fillColor = fillColorTmp;
+    fillColor = hexToRgb(canvas.freeDrawingBrush.color);
     paintAt(xCoord, yCoord);
     tmpContext.putImageData(colorLayerData, 0, 0);
-    const fImage = fabric.Image.fromURL(
-        tmpCanvas.toDataURL(),
-        function (myImg) {
-            //i create an extra var for to change some image properties
-            var img1 = myImg.set({
-                left: 0,
-                top: 0,
-                width: canvasWidth,
-                height: canvasHeight,
-                selectable: false,
-            });
-            canvas.add(img1);
-            canvas.renderAll();
-        }
-    );
-
-    //canvas.add(fImage);
-
-    // return fabric js image
+    console.log(tmpCanvas.toDataURL());
+    fabric.Image.fromURL(tmpCanvas.toDataURL(), function (myImg) {
+        //i create an extra var for to change some image properties
+        var img1 = myImg.set({
+            left: 0,
+            top: 0,
+            width: canvasWidth,
+            height: canvasHeight,
+            selectable: false,
+        });
+        canvas.add(img1);
+        canvas.renderAll();
+    });
 }
 
-$(document).ready(function () {
-    canvas.on("mouse:down", function (options) {
-        if (fillBucket) {
-            colorLayerData = document
-                .getElementById("testCanvas")
-                .getContext("2d")
-                .getImageData(0, 0, canvasWidth, canvasHeight);
+function colorAt(x, y) {
+    var pixelPos = (y * canvasWidth + x) * 4;
+    return {
+        r: colorLayerData.data[pixelPos],
+        g: colorLayerData.data[pixelPos + 1],
+        b: colorLayerData.data[pixelPos + 2],
+    };
+}
 
-            fillCollorAtCoords(
-                options.e.offsetX,
-                options.e.offsetY,
-                fillColor,
-                canvas.width,
-                canvas.height,
-                canvas.data
-            );
-        }
-    });
+function initFillBucket() {
+    canvasWidth = canvas.width;
+    canvasHeight = canvas.height;
+    drawingAreaWidth = canvas.width;
+    drawingAreaHeight = canvas.height;
+}
 
-    document.addEventListener("keydown", keyDownHandler, false);
-
-    function keyDownHandler(e) {
-        if (e.key == "q") {
-            console.log("fillBucket", fillBucket);
-            canvas.isDrawingMode = false;
-            fillBucket = true;
-            for (var obj in canvas._objects) {
-                canvas._objects[obj].selectable = false;
-            }
-        } else if (e.key == "w") {
-            console.log("Drawing");
-            canvas.isDrawingMode = true;
-            fillBucket = false;
-        }
-    }
-});
+function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result
+        ? {
+              r: parseInt(result[1], 16),
+              g: parseInt(result[2], 16),
+              b: parseInt(result[3], 16),
+          }
+        : null;
+}
