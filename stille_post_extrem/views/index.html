@@ -1,0 +1,102 @@
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    /* to remove the top and left whitespace */
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+    }
+    /* just to be sure these are full screen*/
+    canvas {
+        display: block;
+    }
+</style>
+
+<div class="d-flex justify-content-center p-0">
+    <canvas id="canvas" width="1000" height="300"></canvas>
+</div>
+<script>
+    var interval;
+    var width, height;
+    var canvas;
+    var gradient;
+
+    var x;
+    var y;
+
+    $(document).ready(function () {
+        canvas = $("#canvas");
+
+        width = canvas.width();
+        height = canvas.height();
+
+        var context = canvas[0].getContext("2d");
+
+        context.strokeStyle = "#00000000";
+        context.fillStyle = "#ff904bff";
+
+        var x = -20;
+        var y = 250;
+
+        function update() {
+            x += 1;
+            y = Math.sin((Math.PI * x) / width) * -200 + 250;
+            if (x > width + 70) {
+                x = -20;
+            }
+        }
+
+        function paint() {
+            let alpha;
+            if (x < 200) {
+                alpha = Math.floor(x * 2.55);
+            } else if (x > width - 100) {
+                alpha = Math.floor(
+                    (-100 / 40) * Math.abs(width - 100 - x) + 255
+                );
+            } else {
+                alpha = 255;
+            }
+
+            if (alpha < 0) {
+                alpha = 0;
+            } else if (alpha > 255) {
+                alpha = 255;
+            }
+            let alphaHex = alpha.toString(16).padStart(2, "0");
+            gradient = context.createLinearGradient(
+                x - ((x - width) / width) * 60 - 30,
+                y - 45,
+                x - 15,
+                y + 25
+            );
+            gradient.addColorStop(0, "#ff904b" + alphaHex);
+            gradient.addColorStop(0.6, "#8B473D" + alphaHex);
+            gradient.addColorStop(1, "#411934" + alphaHex);
+
+            context.clearRect(0, 0, canvas.width(), canvas.height());
+            context.beginPath();
+            context.fillStyle = gradient;
+            context.arc(x, y, 30, 0, 2 * Math.PI);
+            context.fill();
+            context.stroke();
+        }
+
+        interval = setInterval(function () {
+            paint();
+            update();
+        }, 15);
+
+        // resize the canvas to fill browser window dynamically
+        // window.addEventListener("resize", resizeCanvas, false);
+        // resizeCanvas();
+    });
+
+    // function resizeCanvas() {
+    //     width = window.innerWidth;
+    //     canvas.width(window.innerWidth);
+    // }
+</script>
