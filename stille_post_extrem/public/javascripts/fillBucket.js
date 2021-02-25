@@ -91,14 +91,18 @@ function matchStartColor(pixelPos, startR, startG, startB) {
     g = colorLayerData.data[pixelPos + 1];
     b = colorLayerData.data[pixelPos + 2];
 
-    // If the current pixel matches the clicked color
-    if (r === startR && g === startG && b === startB) {
-        return true;
-    }
+    let tolerance = 0;
 
-    // If current pixel matches the new color
-    if (r === fillColor.r && g === fillColor.g && b === fillColor.b) {
-        return false;
+    // If the current pixel matches the clicked color
+    if (
+        r <= startR + tolerance &&
+        r >= startR - tolerance &&
+        g <= startG + tolerance &&
+        g >= startG - tolerance &&
+        b <= startB + tolerance &&
+        b >= startB - tolerance
+    ) {
+        return true;
     }
 
     return false;
@@ -134,7 +138,6 @@ function fillCollorAtCoords(xCoord, yCoord, tmpColorLayerData, width, height) {
     fillColor = hexToRgb(canvas.freeDrawingBrush.color);
     paintAt(xCoord, yCoord);
     tmpContext.putImageData(colorLayerData, 0, 0);
-    console.log(tmpCanvas.toDataURL());
     fabric.Image.fromURL(tmpCanvas.toDataURL(), function (myImg) {
         //i create an extra var for to change some image properties
         var img1 = myImg.set({

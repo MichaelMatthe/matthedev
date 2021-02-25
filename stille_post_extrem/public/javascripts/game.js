@@ -515,13 +515,11 @@ function setUpColors() {
 }
 
 function enableDrawing() {
-    console.log("Drawing");
     canvas.isDrawingMode = true;
     fillBucket = false;
 }
 
 function enableFillBucket() {
-    console.log("fillBucket", fillBucket);
     canvas.isDrawingMode = false;
     fillBucket = true;
     for (var obj in canvas._objects) {
