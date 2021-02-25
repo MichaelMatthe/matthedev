@@ -1,3 +1,5 @@
+// base on https://github.com/williammalone/HTML5-Paint-Bucket-Tool/blob/master/html5-canvas-paint-bucket.js
+
 var fillBucket = false;
 
 var colorLayerData;
