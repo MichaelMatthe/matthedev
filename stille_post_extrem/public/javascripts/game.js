@@ -15,7 +15,7 @@ var initialBrushWidth = 5;
 
 window.onload = function () {
     socket = io.connect(
-        //"127.0.0.1:7040", // WS-IP
+        // "127.0.0.1:7040", // WS-IP
         {
             reconnect: true,
             transports: ["websocket"],
@@ -152,7 +152,7 @@ window.onload = function () {
             $("#lobbyIdInput").val(window.location.href);
         } else {
             $("#lobbyIdInput").val(
-                window.location.href.split("?")[0] + "/?" + data.lobbyId
+                stripTrailingSlash(window.location.href) + "/?" + data.lobbyId
             );
         }
 
@@ -267,6 +267,8 @@ window.onload = function () {
             );
         }
     });
+
+    //displayResults({});
 };
 
 function createLobby() {
@@ -306,6 +308,7 @@ function showGuessing() {
 }
 
 function endGame(data) {
+    console.log(data);
     let content = data.content;
     let players = data.players;
 
@@ -524,5 +527,68 @@ function enableFillBucket() {
     fillBucket = true;
     for (var obj in canvas._objects) {
         canvas._objects[obj].selectable = false;
+    }
+}
+
+function stripTrailingSlash(str) {
+    if (str.substr(-1) === "/") {
+        return str.substr(0, str.length - 1);
+    }
+    return str;
+}
+
+function displayResults(data) {
+    // let content = data.content;
+    // let players = data.players;
+    let content = resultSample.content;
+    let players = resultSample.players;
+    console.log(resultSample);
+
+    notWaitingForPlayers();
+    $("#drawCanvasDiv").addClass("d-none");
+    $("#guessCanvasDiv").addClass("d-none");
+    $("#submitWord").addClass("d-none");
+
+    let width = 600;
+    let height = 450;
+
+    let resultPlayerButtons = $("#resultCopyDiv").clone(true);
+    $("#resultDivNew").removeClass("d-none");
+    $("#resultDivNew").append(resultPlayerButtons);
+
+    console.log(resultPlayerButtons);
+    for (var player in content) {
+        // let nameDiv = document.createElement("div");
+        // nameDiv.classList.add("whiteFont");
+        // nameDiv.innerHTML = player + "'s Wort: " + content[player][0];
+        // $("#results").append(nameDiv);
+
+        let currentPlayer = players[player];
+        for (var i = 1; i < content[player].length; i++) {
+            if (i % 2 == 0) {
+                // let div = document.createElement("div");
+                // div.classList.add("whiteFont");
+                // div.innerHTML =
+                //     currentPlayer + "'s Guess: " + content[currentPlayer][i];
+                // $("#results").append(div);
+            } else {
+                // let div = document.createElement("div");
+                // div.classList.add("whiteFont");
+                // div.innerHTML = currentPlayer + "'s Drawing:";
+                // $("#results").append(div);
+                // let canvas = document.createElement("canvas");
+                // canvas.width = width;
+                // canvas.height = height;
+                // canvas.style.border = "1px solid black";
+                // let context = canvas.getContext("2d");
+                // let image = new Image();
+                // image.onload = function () {
+                //     context.drawImage(image, 0, 0, width, height);
+                // };
+                // image.src = content[currentPlayer][i];
+                // $("#results").append(canvas);
+            }
+            currentPlayer = players[currentPlayer];
+        }
     }
 }
