@@ -241,7 +241,7 @@ window.onload = function () {
     });
 
     socket.on("endGame", function (data) {
-        endGame(data);
+        displayResults(data);
         $("#resultDiv").removeClass("d-none");
     });
 
@@ -267,8 +267,6 @@ window.onload = function () {
             );
         }
     });
-
-    displayResults(resultSample);
 };
 
 function createLobby() {
@@ -305,55 +303,6 @@ function showDrawing() {
 function showGuessing() {
     $("#guessCanvasDiv").removeClass("d-none");
     notWaitingForPlayers();
-}
-
-function endGame(data) {
-    console.log(data);
-    let content = data.content;
-    let players = data.players;
-
-    notWaitingForPlayers();
-    $("#drawCanvasDiv").addClass("d-none");
-    $("#guessCanvasDiv").addClass("d-none");
-    $("#submitWord").addClass("d-none");
-
-    let width = 400;
-    let height = 300;
-
-    for (var player in content) {
-        let nameDiv = document.createElement("div");
-        nameDiv.classList.add("whiteFont");
-        nameDiv.innerHTML = player + "'s Wort: " + content[player][0];
-        $("#results").append(nameDiv);
-
-        let currentPlayer = players[player];
-        for (var i = 1; i < content[player].length; i++) {
-            if (i % 2 == 0) {
-                let div = document.createElement("div");
-                div.classList.add("whiteFont");
-                div.innerHTML =
-                    currentPlayer + "'s Guess: " + content[currentPlayer][i];
-                $("#results").append(div);
-            } else {
-                let div = document.createElement("div");
-                div.classList.add("whiteFont");
-                div.innerHTML = currentPlayer + "'s Drawing:";
-                $("#results").append(div);
-                let canvas = document.createElement("canvas");
-                canvas.width = width;
-                canvas.height = height;
-                canvas.style.border = "1px solid black";
-                let context = canvas.getContext("2d");
-                let image = new Image();
-                image.onload = function () {
-                    context.drawImage(image, 0, 0, width, height);
-                };
-                image.src = content[currentPlayer][i];
-                $("#results").append(canvas);
-            }
-            currentPlayer = players[currentPlayer];
-        }
-    }
 }
 
 function waitingForPlayers() {
@@ -547,13 +496,8 @@ function displayResults(data) {
     $("#guessCanvasDiv").addClass("d-none");
     $("#submitWord").addClass("d-none");
 
-    let width = 600;
-    let height = 450;
-
     $("#resultDiv").removeClass("d-none");
     document.getElementById("results").style.backgroundColor = "#303030";
-    document.getElementById("results").classList.add("p-3");
-    document.getElementById("results").classList.add("m-3");
 
     let firstPlayer = true;
     for (var player in content) {
@@ -596,51 +540,33 @@ function displayResults(data) {
         } else {
             playerDiv.classList.add("d-none");
         }
-        let playerRow;
 
         let currentPlayer = player;
         for (var i = 0; i < content[player].length; i++) {
+            // Word / Image: content[currentPlayer][i]
+            // Name: currentPlayer
+            let playerRow = document.createElement("div");
+            playerRow.classList.add("d-flex");
+            playerRow.classList.add("flex-row");
+            playerRow.classList.add("p-3");
+            playerRow.style.border = "1px solid white";
+
+            let round = document.createElement("div");
+            round.style.width = "100px";
+            round.innerHTML = i;
+            playerRow.appendChild(round);
+
+            let playerName = document.createElement("div");
+            playerName.style.width = "300px";
+            playerName.innerHTML = currentPlayer;
+            playerRow.appendChild(playerName);
             if (i % 2 == 0) {
-                // Word: content[currentPlayer][i]
-                // Name: currentPlayer
-
-                playerRow = document.createElement("div");
-                playerRow.classList.add("d-flex");
-                playerRow.classList.add("flex-row");
-                playerDiv.appendChild(playerRow);
-
-                let leftSide = document.createElement("div");
-                leftSide.classList.add("d-flex");
-                leftSide.classList.add("flex-column");
-                leftSide.classList.add("justify-content-center");
-                leftSide.style.width = "200px";
-
-                let leftSideContent = document.createElement("div");
-                leftSideContent.classList.add("d-flex");
-                leftSideContent.classList.add("flex-column");
-                leftSideContent.classList.add("align-items-center");
-                let playerName = document.createElement("h1");
-                playerName.style.textDecoration = "underline";
-                playerName.classList.add("p-3");
-                playerName.innerHTML = currentPlayer;
-                let playerWord = document.createElement("h2");
+                // Word
+                let playerWord = document.createElement("div");
                 playerWord.innerHTML = content[currentPlayer][i];
-
-                leftSideContent.appendChild(playerName);
-                leftSideContent.appendChild(playerWord);
-                leftSide.appendChild(leftSideContent);
-                playerRow.appendChild(leftSide);
+                playerRow.appendChild(playerWord);
             } else {
-                // Image: content[currentPlayer][i]
-                // Name: currentPlayer
-                let rightSide = document.createElement("div");
-                rightSide.classList.add("d-flex");
-                rightSide.classList.add("flex-column");
-                rightSide.classList.add("align-items-center");
-
-                let playerName = document.createElement("h2");
-                playerName.classList.add("p-3");
-                playerName.innerHTML = currentPlayer;
+                // Image
                 let imageCanvas = document.createElement("canvas");
                 imageCanvas.width = 600;
                 imageCanvas.height = 450;
@@ -650,11 +576,9 @@ function displayResults(data) {
                     imageContext.drawImage(img, 0, 0, 600, 450);
                 };
                 img.src = content[currentPlayer][i];
-
-                rightSide.appendChild(playerName);
-                rightSide.appendChild(imageCanvas);
-                playerRow.appendChild(rightSide);
+                playerRow.appendChild(imageCanvas);
             }
+            playerDiv.appendChild(playerRow);
             currentPlayer = nextPlayers[currentPlayer];
         }
     }
