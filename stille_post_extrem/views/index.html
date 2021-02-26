@@ -51,11 +51,16 @@
 
         function paint() {
             let alpha;
-            if (x < 200) {
-                alpha = Math.floor(x * 2.55);
-            } else if (x > width - 100) {
+            if (x < 30) {
+                alpha = 0;
+            } else if (x < 300) {
+                alpha = Math.floor((x - 30) * 0.94);
+                console.log(x, alpha);
+            } else if (x > width - 30) {
+                alpha = 0;
+            } else if (x > width - 300) {
                 alpha = Math.floor(
-                    (-100 / 40) * Math.abs(width - 100 - x) + 255
+                    (-17 / 18) * x + (255 + (255 / 270) * (width - 300))
                 );
             } else {
                 alpha = 255;
