@@ -15,7 +15,7 @@ var initialBrushWidth = 5;
 
 window.onload = function () {
     socket = io.connect(
-        // "127.0.0.1:7040", // WS-IP
+        "127.0.0.1:7040", // WS-IP
         {
             reconnect: true,
             transports: ["websocket"],
@@ -268,7 +268,7 @@ window.onload = function () {
         }
     });
 
-    //displayResults({});
+    displayResults(resultSample);
 };
 
 function createLobby() {
@@ -538,11 +538,9 @@ function stripTrailingSlash(str) {
 }
 
 function displayResults(data) {
-    // let content = data.content;
-    // let players = data.players;
-    let content = resultSample.content;
-    let players = resultSample.players;
-    console.log(resultSample);
+    let content = data.content;
+    let nextPlayers = data.players;
+    console.log(data);
 
     notWaitingForPlayers();
     $("#drawCanvasDiv").addClass("d-none");
@@ -552,43 +550,112 @@ function displayResults(data) {
     let width = 600;
     let height = 450;
 
-    let resultPlayerButtons = $("#resultCopyDiv").clone(true);
-    $("#resultDivNew").removeClass("d-none");
-    $("#resultDivNew").append(resultPlayerButtons);
+    $("#resultDiv").removeClass("d-none");
+    document.getElementById("results").style.backgroundColor = "#303030";
+    document.getElementById("results").classList.add("p-3");
+    document.getElementById("results").classList.add("m-3");
 
-    console.log(resultPlayerButtons);
+    let firstPlayer = true;
     for (var player in content) {
-        // let nameDiv = document.createElement("div");
-        // nameDiv.classList.add("whiteFont");
-        // nameDiv.innerHTML = player + "'s Wort: " + content[player][0];
-        // $("#results").append(nameDiv);
+        let button = document.createElement("button");
+        button.innerHTML = player;
+        button.classList.add("btn");
+        button.classList.add("btn-light");
+        button.classList.add("m-1");
+        button.id = player + "ResultButton";
+        $("#resultButtons").append(button);
 
-        let currentPlayer = players[player];
-        for (var i = 1; i < content[player].length; i++) {
-            if (i % 2 == 0) {
-                // let div = document.createElement("div");
-                // div.classList.add("whiteFont");
-                // div.innerHTML =
-                //     currentPlayer + "'s Guess: " + content[currentPlayer][i];
-                // $("#results").append(div);
-            } else {
-                // let div = document.createElement("div");
-                // div.classList.add("whiteFont");
-                // div.innerHTML = currentPlayer + "'s Drawing:";
-                // $("#results").append(div);
-                // let canvas = document.createElement("canvas");
-                // canvas.width = width;
-                // canvas.height = height;
-                // canvas.style.border = "1px solid black";
-                // let context = canvas.getContext("2d");
-                // let image = new Image();
-                // image.onload = function () {
-                //     context.drawImage(image, 0, 0, width, height);
-                // };
-                // image.src = content[currentPlayer][i];
-                // $("#results").append(canvas);
+        button.addEventListener("click", function () {
+            for (var nextPlayer in nextPlayers) {
+                let nextPlayerButton = document.getElementById(
+                    nextPlayer + "ResultButton"
+                );
+                if (nextPlayer == this.innerHTML) {
+                    document
+                        .getElementById(nextPlayer + "Result")
+                        .classList.remove("d-none");
+                    nextPlayerButton.classList.remove("btn-light");
+                    nextPlayerButton.classList.add("btn-primary");
+                } else {
+                    document
+                        .getElementById(nextPlayer + "Result")
+                        .classList.add("d-none");
+                    nextPlayerButton.classList.remove("btn-primary");
+                    nextPlayerButton.classList.add("btn-light");
+                }
             }
-            currentPlayer = players[currentPlayer];
+        });
+
+        let playerDiv = document.createElement("div");
+        playerDiv.id = player + "Result";
+        document.getElementById("results").appendChild(playerDiv);
+        if (firstPlayer) {
+            button.classList.remove("btn-light");
+            button.classList.add("btn-primary");
+            firstPlayer = false;
+        } else {
+            playerDiv.classList.add("d-none");
+        }
+        let playerRow;
+
+        let currentPlayer = player;
+        for (var i = 0; i < content[player].length; i++) {
+            if (i % 2 == 0) {
+                // Word: content[currentPlayer][i]
+                // Name: currentPlayer
+
+                playerRow = document.createElement("div");
+                playerRow.classList.add("d-flex");
+                playerRow.classList.add("flex-row");
+                playerDiv.appendChild(playerRow);
+
+                let leftSide = document.createElement("div");
+                leftSide.classList.add("d-flex");
+                leftSide.classList.add("flex-column");
+                leftSide.classList.add("justify-content-center");
+                leftSide.style.width = "200px";
+
+                let leftSideContent = document.createElement("div");
+                leftSideContent.classList.add("d-flex");
+                leftSideContent.classList.add("flex-column");
+                leftSideContent.classList.add("align-items-center");
+                let playerName = document.createElement("h1");
+                playerName.style.textDecoration = "underline";
+                playerName.classList.add("p-3");
+                playerName.innerHTML = currentPlayer;
+                let playerWord = document.createElement("h2");
+                playerWord.innerHTML = content[currentPlayer][i];
+
+                leftSideContent.appendChild(playerName);
+                leftSideContent.appendChild(playerWord);
+                leftSide.appendChild(leftSideContent);
+                playerRow.appendChild(leftSide);
+            } else {
+                // Image: content[currentPlayer][i]
+                // Name: currentPlayer
+                let rightSide = document.createElement("div");
+                rightSide.classList.add("d-flex");
+                rightSide.classList.add("flex-column");
+                rightSide.classList.add("align-items-center");
+
+                let playerName = document.createElement("h2");
+                playerName.classList.add("p-3");
+                playerName.innerHTML = currentPlayer;
+                let imageCanvas = document.createElement("canvas");
+                imageCanvas.width = 600;
+                imageCanvas.height = 450;
+                let imageContext = imageCanvas.getContext("2d");
+                let img = new Image();
+                img.onload = function () {
+                    imageContext.drawImage(img, 0, 0, 600, 450);
+                };
+                img.src = content[currentPlayer][i];
+
+                rightSide.appendChild(playerName);
+                rightSide.appendChild(imageCanvas);
+                playerRow.appendChild(rightSide);
+            }
+            currentPlayer = nextPlayers[currentPlayer];
         }
     }
 }
