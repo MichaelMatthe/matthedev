@@ -10,8 +10,4 @@ router.get("/simplex", function (req, res, next) {
     res.render("simplexsketcher", { title: "matthe.dev" });
 });
 
-router.get("/test", function (req, res, next) {
-    res.render("test", { title: "matthe.dev" });
-});
-
 module.exports = router;

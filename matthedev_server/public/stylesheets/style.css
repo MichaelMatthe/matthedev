@@ -70,3 +70,8 @@ body {
 .site-header {
     background-color: #080808;
 }
+
+.how-to-play {
+    background-color: #303030 !important;
+    color: #ffffff;
+}

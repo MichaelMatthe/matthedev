@@ -14,6 +14,11 @@ var lobbyPlayers;
 var initialBrushWidth = 5;
 
 window.onload = function () {
+    $("#howToPlayButton").on("click", function () {
+        $("#how-to-play").removeClass("d-none");
+        $("#howToPlayButton").addClass("d-none");
+    });
+
     socket = io.connect(
         //"127.0.0.1:7040", // WS-IP
         {
