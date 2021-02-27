@@ -3,4 +3,8 @@
 -   supervisorctl
     -   restart <name>
 
-- source .bashrc (in /home/matthe) to enable ussage of node
+To enable ussage of node
+```
+cd /home/matthe/
+source .bashrc 
+```
