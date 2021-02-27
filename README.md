@@ -1,5 +1,8 @@
 # Server
 
+- setup:
+    - npm i
+
 -   supervisorctl
     -   restart <name>
 
