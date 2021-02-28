@@ -52,6 +52,11 @@ io.on("connection", function (socket) {
             return;
         }
 
+        if (lobbies[data.lobbyId].players.includes(data.name)) {
+            socket.emit("error", { message: "Name already exists" });
+            return;
+        }
+
         for (var key in lobbies[data.lobbyId].sockets) {
             lobbies[data.lobbyId].sockets[key].emit("playerJoinsLobby", {
                 name: data.name,

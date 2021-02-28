@@ -20,7 +20,7 @@ window.onload = function () {
     });
 
     socket = io.connect(
-        //"127.0.0.1:7040", // WS-IP
+        "127.0.0.1:7040", // WS-IP
         {
             reconnect: true,
             transports: ["websocket"],
@@ -251,6 +251,9 @@ window.onload = function () {
     });
 
     socket.on("error", function (data) {
+        $("#alert-message").html(data.message);
+        $("#alert-div").addClass("show");
+        hideAlertTimer();
         console.log("socket error", data.message);
     });
 
@@ -587,4 +590,10 @@ function displayResults(data) {
             currentPlayer = nextPlayers[currentPlayer];
         }
     }
+}
+
+function hideAlertTimer() {
+    setTimeout(function () {
+        $("#alert-div").hide();
+    }, 5000);
 }

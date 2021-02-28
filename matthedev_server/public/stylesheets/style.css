@@ -75,3 +75,16 @@ body {
     background-color: #303030 !important;
     color: #ffffff;
 }
+
+.game-header {
+    position: relative;
+}
+
+.message-overlay {
+    width: 300px;
+    height: 50px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-radius: 5px;
+}
