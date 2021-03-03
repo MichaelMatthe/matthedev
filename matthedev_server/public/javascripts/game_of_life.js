@@ -76,10 +76,16 @@ function initButtons() {
     document
         .getElementById("canvas")
         .addEventListener("click", function (event) {
-            let x = Math.floor((event.pageX - canvas.offsetLeft) / tileWidth);
-            let y = Math.floor((event.pageY - canvas.offsetTop) / tileHeight);
-            grid[y][x] = Math.abs(grid[y][x] - 1);
-            renderGrid();
+            if (!animationActive) {
+                let x = Math.floor(
+                    (event.pageX - canvas.offsetLeft) / tileWidth
+                );
+                let y = Math.floor(
+                    (event.pageY - canvas.offsetTop) / tileHeight
+                );
+                grid[y][x] = Math.abs(grid[y][x] - 1);
+                renderGrid();
+            }
         });
 }
 
