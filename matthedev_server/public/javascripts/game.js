@@ -20,7 +20,7 @@ window.onload = function () {
     });
 
     socket = io.connect(
-        "127.0.0.1:7040", // WS-IP
+        // "127.0.0.1:7040", // WS-IP
         {
             reconnect: true,
             transports: ["websocket"],
