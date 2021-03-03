@@ -62,6 +62,7 @@ function initButtons() {
         .getElementById("clearButton")
         .addEventListener("click", function () {
             initGrid();
+            renderGrid();
         });
 
     document
