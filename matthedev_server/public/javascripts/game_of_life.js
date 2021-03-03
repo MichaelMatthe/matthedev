@@ -4,7 +4,7 @@ var context;
 var grid;
 
 var gridWidth = 50;
-var gridHeight = 50;
+var gridHeight = 40;
 
 var tileWidth = 15;
 var tileHeight = 15;
