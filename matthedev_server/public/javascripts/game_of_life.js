@@ -56,6 +56,7 @@ function initButtons() {
         .getElementById("gliderGunButton")
         .addEventListener("click", function () {
             initGliderGun();
+            renderGrid();
         });
 
     document
