@@ -69,13 +69,17 @@ function initButtons() {
     document
         .getElementById("animationSpeed")
         .addEventListener("input", function () {
-            updateRate = document.getElementById("animationSpeed").value;
+            updateRate =
+                document.getElementById("animationSpeed").value * -1 + 510;
         });
 
     document
         .getElementById("canvas")
         .addEventListener("click", function (event) {
-            console.log(event);
+            let x = Math.floor((event.pageX - canvas.offsetLeft) / tileWidth);
+            let y = Math.floor((event.pageY - canvas.offsetTop) / tileHeight);
+            grid[y][x] = Math.abs(grid[y][x] - 1);
+            renderGrid();
         });
 }
 
