@@ -38,6 +38,13 @@ function playAnimation() {
 
 function initButtons() {
     document
+        .getElementById("animationSpeed")
+        .addEventListener("input", function () {
+            updateRate =
+                document.getElementById("animationSpeed").value * -1 + 510;
+        });
+
+    document
         .getElementById("playButton")
         .addEventListener("click", function () {
             if (animationActive) {
@@ -68,10 +75,14 @@ function initButtons() {
         });
 
     document
-        .getElementById("animationSpeed")
-        .addEventListener("input", function () {
-            updateRate =
-                document.getElementById("animationSpeed").value * -1 + 510;
+        .getElementById("randomButton")
+        .addEventListener("click", function () {
+            for (var y = 0; y < gridHeight; y++) {
+                for (var x = 0; x < gridWidth; x++) {
+                    grid[y][x] = Math.floor(Math.random() * 2);
+                }
+            }
+            renderGrid();
         });
 
     document
