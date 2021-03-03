@@ -1,0 +1,24 @@
+<div class="container p-3">
+    <div class="d-flex justify-content-center">
+        <canvas id="canvas"></canvas>
+    </div>
+    <div class="d-flex flex-row justify-content-center p-3">
+        <input
+            id="animationSpeed"
+            type="range"
+            class="form-range"
+            min="10"
+            max="500"
+            step="1"
+        />
+        <button id="playButton" class="btn btn-light m-1" style="width: 80px">
+            <i class="fas fa-pause"></i>
+        </button>
+        <button id="gliderGunButton" class="btn btn-light m-1">
+            GliderGun
+        </button>
+        <button id="clearButton" class="btn btn-light m-1">Clear</button>
+    </div>
+</div>
+
+<script src="/javascripts/game_of_life.js"></script>
