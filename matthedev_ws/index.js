@@ -8,9 +8,10 @@ var crypto = require("crypto");
 var clients = [];
 require("dotenv").config();
 
-//
-var lobbies = {};
 // XXX(id): {players: [name1, name2...], sockets: {name1: socket, name2: socket}}
+var lobbies = {};
+// socket: name
+var activeSockets = {};
 
 /* Besseres logging */
 var log = function () {
@@ -34,7 +35,25 @@ log("Starte Websocket Server");
 io.on("connection", function (socket) {
     // var hostname = socket.handshake.headers.host.toLowerCase();
 
-    socket.on("disconnect", function (data) {});
+    socket.on("disconnect", function (data) {
+        // add player to list of disconnected players
+
+        // remove socket from activeSockets
+
+        if (
+            activeSockets.hasOwnProperty(socket.id) &&
+            lobbies.hasOwnProperty(activeSockets[socket.id].lobbyId)
+        ) {
+            // send message to others about disconnect
+            let dcName = activeSockets[socket.id].playerName;
+            let dcLobby = activeSockets[socket.id].lobbyId;
+            for (var key in lobbies[dcLobby].sockets) {
+                lobbies[dcLobby].sockets[key].emit("playerDisconnected", {
+                    name: dcName,
+                });
+            }
+        }
+    });
 
     socket.on("createLobby", function (data) {
         let lobbyId = Math.floor(Math.random() * 1000000000).toString(16);
@@ -44,6 +63,7 @@ io.on("connection", function (socket) {
         lobbies[lobbyId].sockets[data.name] = socket;
 
         socket.emit("joinLobby", { lobbyId: lobbyId, players: [data.name] });
+        addSocket(socket.id, data.name, data.lobbyId);
     });
 
     socket.on("joinLobby", function (data) {
@@ -69,6 +89,7 @@ io.on("connection", function (socket) {
             lobbyId: data.lobbyId,
             players: lobbies[data.lobbyId].players,
         });
+        addSocket(socket.id, data.name, data.lobbyId);
     });
 
     socket.on("startGame", function (data) {
@@ -236,4 +257,8 @@ function endRound(lobbyId) {
         });
     }
     delete lobbies[lobbyId];
+}
+
+function addSocket(socketId, f_playerName, f_lobbyId) {
+    activeSockets[socketId] = { playerName: f_playerName, lobbyId: f_lobbyId };
 }

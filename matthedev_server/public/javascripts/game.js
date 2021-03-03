@@ -20,7 +20,7 @@ window.onload = function () {
     });
 
     socket = io.connect(
-        //"127.0.0.1:7040", // WS-IP
+        "127.0.0.1:7040", // WS-IP
         {
             reconnect: true,
             transports: ["websocket"],
@@ -167,9 +167,17 @@ window.onload = function () {
     });
 
     socket.on("playerJoinsLobby", function (data) {
-        console.log(data.name);
         lobbyPlayers.push(data.name);
-        $("#players").append("<div class='whiteFont'>" + data.name + "</div>");
+        let playerDiv = document.createElement("div");
+        playerDiv.id = data.name + "LobbyName";
+        playerDiv.classList.add("whiteFont");
+        $("#players").append(
+            "<div id='" +
+                data.name +
+                "LobbyName' class='whiteFont'>" +
+                data.name +
+                "</div>"
+        );
     });
 
     socket.on("startGame", function (data) {
@@ -251,10 +259,15 @@ window.onload = function () {
     });
 
     socket.on("error", function (data) {
-        $("#alert-message").html(data.message);
-        $("#alert-div").addClass("show");
-        hideAlertTimer();
-        console.log("socket error", data.message);
+        showAlertMessage(data.message);
+    });
+
+    socket.on("playerDisconnected", function (data) {
+        console.log("player disconnected");
+        document.getElementById(data.name + "LobbyName").remove();
+        showAlertMessage("<strong>" + data.name + "</strong> disconnected.");
+
+        // if game has not started remove player from lobby
     });
 
     // Fill Bucket
@@ -590,6 +603,12 @@ function displayResults(data) {
             currentPlayer = nextPlayers[currentPlayer];
         }
     }
+}
+
+function showAlertMessage(content) {
+    $("#alert-message").html(content);
+    $("#alert-div").addClass("show");
+    hideAlertTimer();
 }
 
 function hideAlertTimer() {
