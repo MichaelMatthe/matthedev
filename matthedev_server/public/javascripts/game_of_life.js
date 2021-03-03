@@ -22,6 +22,7 @@ $(document).ready(function () {
     context.canvas.width = gridWidth * tileWidth;
     context.canvas.height = gridHeight * tileHeight;
     initGrid();
+    initGliderGun();
 
     renderGrid();
     timeOut = setTimeout(loop, updateRate);
