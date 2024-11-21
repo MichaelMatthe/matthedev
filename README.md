@@ -1,13 +1,9 @@
-# Server
+# Run server:
 
-- setup:
-    - npm i
-
--   supervisorctl
-    -   restart <name>
-
-To enable ussage of node
 ```
-cd /home/matthe/
-source .bashrc 
+cd matthedev_server
+npm install
+npm start
 ```
+
+(Server is running on: localhost:7000 see matthedev_server/bin/www)
