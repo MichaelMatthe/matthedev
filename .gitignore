@@ -1,4 +1,82 @@
-.code-workspace
-stille_post_extrem/node_modules
-stille_post_server/node_modules
-node_modules
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+debug.log
+error.log
+*.gz
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Visual Studio Code
+.vscode/
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
+.vscode/*.code-workspace
+!.vscode/extensions.json # Include extension recommendations
+!.vscode/settings.json   # Optionally include settings for shared projects
+
+# Build directories
+build/
+dist/
+coverage/
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*.bak
+
+# Editor backup files
+*.~*
+*.bak
+*.orig
+*.old
+
+# Test Coverage
+coverage/
+.nyc_output/
+
+# TypeScript
+*.tsbuildinfo
+
+# Miscellaneous
+*.tgz
+*.pid
+*.seed
+*.pid.lock
+
+# Lock files
+package-lock.json
+yarn.lock
+
+# IDE files
+.idea/
+*.iml
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+
+# Optional: Uncomment if using ESLint/Prettier and want to exclude cache
+# .eslintcache
+# .prettiercache
