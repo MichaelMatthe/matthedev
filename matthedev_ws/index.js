@@ -167,11 +167,10 @@ io.on("connection", function (socket) {
                     lobbies[data.lobbyId].sockets[receiverName].emit(
                         "startGuessRound",
                         {
-                            image:
-                                lobbies[data.lobbyId].playerContent[key][
-                                    lobbies[data.lobbyId].playerContent[key]
-                                        .length - 1
-                                ],
+                            image: lobbies[data.lobbyId].playerContent[key][
+                                lobbies[data.lobbyId].playerContent[key]
+                                    .length - 1
+                            ],
                             round: lobbies[data.lobbyId].round,
                         }
                     );
@@ -205,11 +204,10 @@ io.on("connection", function (socket) {
                     lobbies[data.lobbyId].sockets[receiverName].emit(
                         "startDrawRound",
                         {
-                            word:
-                                lobbies[data.lobbyId].playerContent[key][
-                                    lobbies[data.lobbyId].playerContent[key]
-                                        .length - 1
-                                ],
+                            word: lobbies[data.lobbyId].playerContent[key][
+                                lobbies[data.lobbyId].playerContent[key]
+                                    .length - 1
+                            ],
                             round: lobbies[data.lobbyId].round,
                         }
                     );
